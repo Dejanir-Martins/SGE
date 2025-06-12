@@ -45,46 +45,49 @@ public class Main extends SGE {
                                 String id = scan.nextLine().trim();
                                 System.out.print("SENHA: ");
                                 String pass = scan.nextLine().trim();
+                                if (!system.student.getListStudent().isEmpty()) {
+                                    if (system.LoginStudant(id, pass)) {
+                                        System.out.println("LOGIN COMO ESTUDANTE EFETUADO COM SUCESSO.");
+                                        Student student = system.findStudent(id);
+                                        String alunoOp;
+                                        do {
+                                            System.out.println("PERFIL: -> " + VERDE + student.getName() + RESET);
+                                            System.out.println("1 - VER NOTAS");
+                                            System.out.println("2 - ENVIAR MENSAGEM");
+                                            System.out.println("3 - VOLTAR");
+                                            System.out.print("OPÇÃO: ");
+                                            alunoOp = scan.nextLine();
 
-                                if (system.LoginStudant(id, pass)) {
-                                    System.out.println("LOGIN COMO ESTUDANTE EFETUADO COM SUCESSO.");
-                                    Student student = system.findStudent(id);
-                                    String alunoOp;
-                                    do {
-                                        System.out.println("PERFIL: -> "+VERDE+student.getName()+RESET);
-                                        System.out.println("1 - VER NOTAS");
-                                        System.out.println("2 - ENVIAR MENSAGEM");
-                                        System.out.println("3 - VOLTAR");
-                                        System.out.print("OPÇÃO: ");
-                                        alunoOp = scan.nextLine();
+                                            switch (alunoOp) {
+                                                case "1" -> {
+                                                    System.out.println("INFORME A DISCIPLINA");
 
-                                        switch (alunoOp) {
-                                            case "1" -> {
-                                                System.out.println("INFORME A DISCIPLINA");
-
-                                                for (People.Disciplina d : People.Disciplina.values()) {
-                                                    System.out.println(d.name());  // Ou d.toString(), caso tenha sobrescrito o método toString()
+                                                    for (People.Disciplina d : People.Disciplina.values()) {
+                                                        System.out.println(d.name());  // Ou d.toString(), caso tenha sobrescrito o método toString()
+                                                    }
+                                                    String subject = scan.nextLine().trim();
+                                                    switch (subject) {
+                                                        case "1" -> {
+                                                            System.out.println(student.getNotasPorDisciplina());
+                                                        }
+                                                    }
                                                 }
-                                                String subject = scan.nextLine().trim();
-                                                switch (subject){
-                                                    case "1" ->{
-                                                        System.out.println(student.getNotasPorDisciplina());}
-                                                }
-                                                }
 
-                                            case "2" -> {
-                                                System.out.print("DESTINATÁRIO\n1 - ADM\n2 - PROFESSOR: ");
-                                                String dest = scan.nextLine();
-                                                System.out.print("MENSAGEM: ");
-                                                String msg = scan.nextLine();
-                                                System.out.println("Mensagem enviada!");
+                                                case "2" -> {
+                                                    System.out.print("DESTINATÁRIO\n1 - ADM\n2 - PROFESSOR: ");
+                                                    String dest = scan.nextLine();
+                                                    System.out.print("MENSAGEM: ");
+                                                    String msg = scan.nextLine();
+                                                    System.out.println("Mensagem enviada!");
+                                                }
+                                                case "3" -> System.out.println("Saindo do modo aluno...");
+                                                default -> System.out.println("Opção inválida.");
                                             }
-                                            case "3" -> System.out.println("Saindo do modo aluno...");
-                                            default -> System.out.println("Opção inválida.");
-                                        }
-                                    } while (!alunoOp.equals("3"));
+                                        } while (!alunoOp.equals("3"));
 
-                                } else if (system.LoginTeacher(id, pass)) {
+                                    }
+                                } else if (!system.teacher.getListTeachers().isEmpty()) {
+                                if (system.LoginTeacher(id, pass)) {
                                     Teacher teacher = system.findTeacher(id);
 // PROFESSOR
                                     String profOp;
@@ -120,6 +123,7 @@ public class Main extends SGE {
                                     } while (!profOp.equals("4"));
 
                                 }
+                                }
                                 else if (id.equals(system.getAdminid()) && pass.equals(system.getAdmPass())) {
                                     String adminChoice;
                                     do {
@@ -129,7 +133,7 @@ public class Main extends SGE {
                                         System.out.println("3 - ATUALIZAR");
                                         System.out.println("0 - SAIR");
                                         System.out.print("OPÇÃO: ");
-                                        adminChoice = scan.nextLine();
+                                        adminChoice = scan.nextLine().trim();
                                         switch (adminChoice) {
                                             case "1" -> {
                                                 System.out.println("DESEJA CADASTRAR UM NOVO: \n 1 - ALUNO OU 2 - PROFESSOR X - VOLTAR");
@@ -143,83 +147,60 @@ public class Main extends SGE {
                                             }
 
                                             case "2" -> {
-                                                String escolha = scan.nextLine();
+                                                if (system.student.getListStudent().isEmpty() && system.teacher.getListTeachers().isEmpty()) {
+                                                    System.out.println(RED + "AINDA NÃO EXISTE NINGUÉM PARA LISTAR" + RESET);
+                                                    System.out.println(YELLOW + "CONVÉM ADICIONAR ALGUÉM PRIMEIRO\n" + RESET);
+                                                    break;
+                                                }
+                                                String escolha = scan.nextLine().trim();
                                                 System.out.println("1 - ALUNOS\n2 - PROFESSOR\n3 - VOLTAR");
                                                 switch (escolha) {
-                                                    case "1" -> system.show(true, true, false, null);
-                                                    case "2" -> system.show(true, false, true, null);
+                                                    case "1" -> {
+                                                        if (system.student.getListStudent().isEmpty()) {
+                                                            System.out.println(YELLOW + "SEM ALUNOS AINDA\n" + RESET);
+                                                            break;
+                                                        }system.show(true, true, false, null);
+                                                    }
+                                                    case "2" ->{
+                                                        if (system.teacher.getListTeachers().isEmpty()) {
+                                                            System.out.println(YELLOW+"AINDA NENHUM PROFESSOR PARA LISTAR" + RESET);
+                                                            break;
+                                                        }
+                                                        system.show(true, false, true, null);
+                                                    }
                                                     case "3" -> {
-                                                        System.out.println("SAINDO..");
                                                         return;
                                                     }
-                                                    default ->
-                                                            System.out.println(YELLOW + "INVÁLIDO. DEVIAS DIGITAR UM GRUPO CORRESPONDE AO NÚMER (1-2)");
+                                                    default -> System.out.println(YELLOW + "INVÁLIDO. DEVIAS DIGITAR UM GRUPO CORRESPONDE AO NÚMER (1-3)");
                                                 }
                                             }
                                             case "3" -> {
                                                 if (system.student.getListStudent().isEmpty() && system.teacher.getListTeachers().isEmpty()) {
-                                                    System.out.println(RED + "AINDA NÃO EXISTE NINGUÉM PARA ATUALIZAR OU REMOVER" + RESET);
+                                                    System.out.println(RED + "AINDA NÃO EXISTE NINGUÉM PARA ATUALIZAR" + RESET);
                                                     System.out.println(YELLOW + "CONVÉM ADICIONAR ALGUÉM PRIMEIRO\n" + RESET);
                                                     break;
                                                 }
+                                                System.out.print("INFORME O IDENTIFICADOR: ");
+                                                String identify = scan.nextLine();
                                                 //continuar aqui
                                                 if (!system.student.getListStudent().isEmpty()) {
-                                                    System.out.print("INFORME O IDENTIFICADOR: ");
-                                                    String identify = scan.nextLine();
-
                                                     if (system.findStudent(identify) != null) {
                                                         Student aluno = system.findStudent(identify);
                                                         Update(aluno, scan, identify, system);
-                                                        return;
                                                     }
-                                                        try {
-                                                            int decision = Integer.parseInt(scan.nextLine());
-                                                            switch (decision) {
-                                                                case 1 -> System.out.println("REINICIE O MENU DE ATUALIZAÇÃO.");
-                                                                case 2 -> {
-                                                                    System.out.println("1 - ELIMINAR TODOS OS ALUNOS");
-                                                                    System.out.println("2 - APENAS ESTE ALUNO");
-                                                                    System.out.print("DECISÃO: ");
-                                                                    int delChoice = Integer.parseInt(scan.nextLine());
-                                                                    if (delChoice == 1) {
-                                                                        System.out.print("TEM CERTEZA QUE DESEJA ELIMINAR TODOS OS ALUNOS? (S/N): ");
-                                                                        String confirm = scan.nextLine();
-                                                                        if (confirm.equalsIgnoreCase("s")) {
-//delete
-                                                                        } else {
-                                                                            System.out.println("ACAO CANCELADA");
-                                                                        }
-                                                                    } else if (delChoice == 2) {
-                                                                        System.out.print("TEM CERTEZA QUE DESEJA ELIMINAR ESTE ALUNO? (S/N): ");
-                                                                        String confirm = scan.nextLine();
-                                                                        if (confirm.equalsIgnoreCase("s")) {
-
-                                                                        } else {
-                                                                            System.out.println("ACAO CANCELADA");
-                                                                        }
-                                                                    }
-                                                                }
-                                                                case 3 -> System.out.println("VOLTANDO AO MENU PRINCIPAL...");
-                                                                default -> System.out.println("ESCOLHA INVÁLIDA.");
-                                                            }
-                                                        } catch (NumberFormatException e) {
-                                                            System.out.println("DIGITE UMA OPÇÃO VÁLIDA NUMÉRICA.");
+                                                }else if (!system.teacher.getListTeachers().isEmpty()) {
+                                                        if (system.findTeacher(identify) != null) {
+                                                            Teacher teacher1 = system.findTeacher(identify);
+                                                            Update(teacher1, scan, identify, system);
                                                         }
-
-                                                    } else {
-                                                        System.out.println("ALUNO NÃO ENCONTRADO.");
-                                                    }
+                                                    }else {
+                                                    System.out.println("NINGUEM FOI ENCONTRADO");
+                                                    System.out.println(RED+"EVIDENTEMENTE AS LISTAS ESTÃO VAZIAS"+RESET);
                                                 }
-                                            }
+                                                }
                                             case "0" -> {
-                                                System.out.print("SAINDO");
-                                                for (int i = 0; i < 3; i++) {
-                                                    System.out.print(".");
-                                                    Thread.sleep(700);
-                                                }
                                                 System.out.println("\nMODO ADMINISTRADOR ENCERRADO.");
                                             }
-
                                             default -> System.out.println("OPÇÃO INVÁLIDA.");
                                         }
                                     }while (!adminChoice.equals("0"));
@@ -229,7 +210,6 @@ public class Main extends SGE {
                                     System.out.println(YELLOW+"REVEJA POR FAVOR OS DADOS QUE INTRODUZIO"+RESET);
                                 }
                             }
-
                             case "2" -> System.out.println("ENCERRANDO O SISTEMA...");
 
                             default -> System.out.println(YELLOW+"OPÇÃO INVÁLIDA! ESCOLHA ENTRE 1 E 2."+RESET);
@@ -239,7 +219,7 @@ public class Main extends SGE {
                     //modo gui
                 }else if (menuChoice.equals("0")) System.out.println("EXITING...");
                 else System.out.println(ROXO+"Please enter a valid choice! "+RESET);
-            }while (menuChoice.equals("0"));
+            }while (!menuChoice.equals("0"));
             scan.close();
         }
 }

@@ -51,7 +51,30 @@ public class SGEService extends People{
             String result;
             switch (option) {
                 case "6" ->{
-                    system.delete(false,false,false);
+                    System.out.println("1 - ELIMINAR TODOS OS ALUNOS");
+                    System.out.println("2 - APENAS ESTE ALUNO");
+                    System.out.println("3 - VLOTAR");
+                    System.out.print("DECISÃO: ");
+                    String delChoice = scan.nextLine();
+                    if (delChoice.equals("1")) {
+                        System.out.print("TEM CERTEZA QUE DESEJA ELIMINAR TODOS OS ALUNOS? (S/N): ");
+                        String confirm = scan.nextLine();
+                        if (confirm.equalsIgnoreCase("s")) {
+                            system.delete(true,false,true);
+                            System.out.println("ALUNOS ELIMINADO COM SUCESSO!");
+                        } else {
+                            System.out.println("ACAO CANCELADA");
+                        }
+                    } else if (delChoice.equals("2")) {
+                        System.out.print("TEM CERTEZA QUE DESEJA ELIMINAR ESTE ALUNO? (S/N): ");
+                        String confirm = scan.nextLine();
+                        if (confirm.equalsIgnoreCase("s")) {
+                            system.delete(false,null,aluno);
+                            System.out.println("ALUNO ELIMINADO COM SUCESSO!");
+                        } else {
+                            System.out.println("ACAO CANCELADA");
+                        }
+                    }
                 }
                 case "1" -> {
                     System.out.print("DIGITE O NOVO NOME: ");
