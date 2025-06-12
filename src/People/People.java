@@ -1,5 +1,5 @@
 package People;
 
-public class ADM {
+public class People {
     //dados de adm
 }
