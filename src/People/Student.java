@@ -1,6 +1,12 @@
 package People;
 import java.util.ArrayList;
-public class Student {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import Core.*;
+
+public class Student extends People{
+    SGEService service = new SGEService();
 
     private String Name;
     private String PIN;
@@ -11,6 +17,7 @@ public class Student {
     final ArrayList<String> correio;
     public double[] notas = new double[3];
     private final ArrayList<Student> listStudent = new ArrayList<>();
+    private Map<Disciplina, List<Double>> notasPorDisciplina;
 
 
     public Student(String name,
@@ -26,6 +33,8 @@ public class Student {
         this.Year = year;
         this.Class = aClass;
         correio = new ArrayList<>();
+        this.notasPorDisciplina = new HashMap<>();
+        service.inicializarDisciplinas();
     }
 
     public long getProcessNumber() {
@@ -51,5 +60,9 @@ public class Student {
 
     public ArrayList<Student> getListStudent() {
         return listStudent;
+    }
+
+    public Map<Disciplina, List<Double>> getNotasPorDisciplina() {
+        return notasPorDisciplina;
     }
 }

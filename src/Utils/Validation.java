@@ -47,7 +47,7 @@ public class Validation {
 
     }
 
-    public boolean Option(int escolha, int min, int max) {
+    public boolean Option(float escolha, float min, float max) {
         return escolha >= min && escolha <= max;
     }
 

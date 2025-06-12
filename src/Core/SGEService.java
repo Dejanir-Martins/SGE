@@ -4,16 +4,17 @@ import Main.Main;
 import People.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import Utils.*;
+import Utils.Validation;
 
-import static Utils.Colors.RED;
-import static Utils.Colors.RESET;
+import static Utils.Colors.*;
 
-public class SGEService{
+public class SGEService extends People{
     Student student;
     Teacher teacher;
+    Validation isValid;
 
     public int gerarID() {
             final int MIN_ID = 15000;
@@ -174,8 +175,4 @@ public class SGEService{
 
     }
 
-    public void enviarMensagem(String de, String para, String conteudo) {
-        caixaMensagens.computeIfAbsent(para, k -> new ArrayList<>())
-                .add(new Mensagem(de, para, conteudo));
-    }
 }
