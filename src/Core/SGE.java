@@ -7,12 +7,16 @@ import Utils.*;
 import static Utils.Colors.*;
 
 public abstract class SGE{
-    Student student;
-    Teacher teacher;
+    protected Student student;
+    protected Teacher teacher;
     Validation isValid;
     SGEService service;
 
-    private final String admPass = "SGE2025";
+    private final String admPass,adminid;{
+        admPass = "SGE2025";
+        adminid = "15031";
+    }
+
 
     protected void create(String name, String subject){
 
@@ -341,5 +345,12 @@ String turma = null;
             return;
         }
         System.out.println(RED + "NADA MUDADO\n" + RESET);
+    }
+
+    protected String getAdminid() {
+        return adminid;
+    }
+    protected String getAdmPass(){
+        return admPass;
     }
 }

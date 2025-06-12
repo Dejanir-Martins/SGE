@@ -43,12 +43,16 @@ public class SGEService extends People{
             System.out.println("3 - CLASSE");
             System.out.println("4 - CURSO");
             System.out.println("5 - SENHA");
+            System.out.println("6 - ELIMINAR");
             System.out.println("0 - VOLTAR");
             System.out.print("OPÇÃO: ");
             option = scan.nextLine();
 
             String result;
             switch (option) {
+                case "6" ->{
+                    system.delete(false,false,false);
+                }
                 case "1" -> {
                     System.out.print("DIGITE O NOVO NOME: ");
                     String nome = scan.nextLine();
@@ -168,7 +172,33 @@ public class SGEService extends People{
                         System.out.println(YELLOW+"DIGITE UMA NOTA VÁLIDA, DE PREFERENCIA NÚMEROS"+RESET);
                     }
                 }
-            }
+                case "2" ->{
+                    System.out.println("DIGITE A NOTA: ");
+                    String nota = scan.nextLine();
+                    if (isValid.Number(nota)) {
+                        if (isValid.Option(Float.parseFloat(nota),0,20)){
+                            atualizarNota(disciplina, 1, Float.parseFloat(nota),student);
+                            //NO METODO MAIN CHMAR O METODO QUE IMPRIME AS NOTAS DO ESTUDANTE
+                            System.out.println(VERDE+"NOTA LAÇADA"+RESET);
+                        }else System.out.println(YELLOW+"DIGITE UMA NOTA DE O - 20"+RESET);
+                    }else {
+                        System.out.println(YELLOW+"DIGITE UMA NOTA VÁLIDA, DE PREFERENCIA NÚMEROS"+RESET);
+                    }
+                }
+                case "3" ->{
+                    System.out.println("DIGITE A NOTA: ");
+                    String nota = scan.nextLine();
+                    if (isValid.Number(nota)) {
+                        if (isValid.Option(Float.parseFloat(nota),0,20)){
+                            atualizarNota(disciplina, 2, Float.parseFloat(nota),student);
+                            //NO METODO MAIN CHMAR O METODO QUE IMPRIME AS NOTAS DO ESTUDANTE
+                            System.out.println(VERDE+"NOTA LAÇADA"+RESET);
+                        }else System.out.println(YELLOW+"DIGITE UMA NOTA DE O - 20"+RESET);
+                    }else {
+                        System.out.println(YELLOW+"DIGITE UMA NOTA VÁLIDA, DE PREFERENCIA NÚMEROS"+RESET);
+                    }
+                }
+                }
         }while (!option.equals("0"));
 
 

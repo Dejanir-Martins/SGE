@@ -57,5 +57,4 @@ public class Validation {
     public boolean Subject(String subject){
         return subject!=null && Integer.parseInt(subject) > 1 && Integer.parseInt(subject) < 11;
     }
-
 }
