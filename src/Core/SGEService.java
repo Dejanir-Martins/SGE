@@ -12,11 +12,8 @@ import Utils.Validation;
 import static Utils.Colors.*;
 
 public class SGEService extends People{
-    Student student;
-    Teacher teacher;
-    Validation isValid;
 
-    public int gerarID() {
+    public static int gerarID() {
             final int MIN_ID = 15000;
             final int MAX_ID = 16000;
             final Random random = new Random();
@@ -28,9 +25,9 @@ public class SGEService extends People{
 
             return newID;
         }
-        private boolean idExist(int id) {
-            return student.getListStudent().stream().anyMatch(student -> student.getProcessNumber() == id) ||
-                    teacher.getListTeachers().stream().anyMatch(teacher -> teacher.getId() == id);
+        private static boolean idExist(int id) {
+            return Student.listStudent.stream().anyMatch(student -> student.getProcessNumber() == id) ||
+                    Teacher.listTeachers.stream().anyMatch(teacher -> teacher.getId() == id);
         }
 
 
@@ -53,14 +50,14 @@ public class SGEService extends People{
                 case "6" ->{
                     System.out.println("1 - ELIMINAR TODOS OS ALUNOS");
                     System.out.println("2 - APENAS ESTE ALUNO");
-                    System.out.println("3 - VLOTAR");
+                    System.out.println("3 - VOLTAR");
                     System.out.print("DECISÃO: ");
                     String delChoice = scan.nextLine();
                     if (delChoice.equals("1")) {
                         System.out.print("TEM CERTEZA QUE DESEJA ELIMINAR TODOS OS ALUNOS? (S/N): ");
                         String confirm = scan.nextLine();
                         if (confirm.equalsIgnoreCase("s")) {
-                            system.delete(true,false,true);
+                            system.delete(false,true);
                             System.out.println("ALUNOS ELIMINADO COM SUCESSO!");
                         } else {
                             System.out.println("ACAO CANCELADA");
@@ -94,6 +91,12 @@ public class SGEService extends People{
                     result = system.update(aluno, false, true,false, false, curso);
                     System.out.println(result);
                 }
+                case "5" ->{
+                    System.out.println("DIGITE A NOVA SENHA");
+                    String senha = scan.nextLine();
+                    result = system.update(aluno,false,false,false,true,senha);
+                    System.out.println(result);
+                }
                 case "0" -> System.out.println("VOLTANDO AO MENU ANTERIOR...");
                 default -> System.out.println(RED + "OPÇÃO INVÁLIDA." + RESET);
             }
@@ -107,12 +110,39 @@ public class SGEService extends People{
             System.out.println("1 - NOME");
             System.out.println("2 - DISCIPLINA");
             System.out.println("3 - SENHA");
+            System.out.println("4 - ELIMINAR");
             System.out.println("0 - VOLTAR");
             System.out.print("OPÇÃO: ");
-            option = scan.nextLine();
+            option = scan.nextLine().trim();
 
             String result;
             switch (option) {
+                case "4" ->{
+                    System.out.println("1 - ELIMINAR TODOS OS PROFESSORES");
+                    System.out.println("2 - APENAS ESTE PROF");
+                    System.out.println("3 - VOLTAR");
+                    System.out.print("DECISÃO: ");
+                    String delChoice = scan.nextLine();
+                    if (delChoice.equals("1")) {
+                        System.out.print("TEM CERTEZA QUE DESEJA ELIMINAR TODOS OS PROFESSORES? (S/N): ");
+                        String confirm = scan.nextLine();
+                        if (confirm.equalsIgnoreCase("s")) {
+                            system.delete(true,false);
+                            System.out.println("PROFESSORES ELIMINADOS COM SUCESSO!");
+                        } else {
+                            System.out.println("AÇÃO CANCELADA");
+                        }
+                    } else if (delChoice.equals("2")) {
+                        System.out.print("TEM CERTEZA QUE DESEJA ELIMINAR ESTE PROF? (S/N): ");
+                        String confirm = scan.nextLine();
+                        if (confirm.equalsIgnoreCase("s")) {
+                            system.delete(true,teacher,null);
+                            System.out.println("ALUNO ELIMINADO COM SUCESSO!");
+                        } else {
+                            System.out.println("ACAO CANCELADA");
+                        }
+                    }
+                }
                 case "1" -> {
                     System.out.print("DIGITE O NOVO NOME: ");
                     String nome = scan.nextLine();
@@ -140,7 +170,7 @@ public class SGEService extends People{
 
     public void inicializarDisciplinas() {
         for (Disciplina disciplina : Disciplina.values()) {
-            student.getNotasPorDisciplina().put(disciplina, new ArrayList<>());
+            Student.getNotasPorDisciplina().put(disciplina, new ArrayList<>());
         }
     }
 
@@ -154,7 +184,7 @@ public class SGEService extends People{
         }
     }*/
 
-    public void atualizarNota(Disciplina disciplina, int indice, double novaNota, Student student) {
+    public static void atualizarNota(Disciplina disciplina, int indice, double novaNota, Student student) {
         List<Double> notas = student.getNotasPorDisciplina().get(disciplina);
         if (indice >= 0 && indice < notas.size()) {
             notas.set(indice, novaNota);
@@ -165,7 +195,7 @@ public class SGEService extends People{
     }
 
     public double calcularMedia(Disciplina disciplina) {
-        List<Double> notas = student.getNotasPorDisciplina().get(disciplina);
+        List<Double> notas = Student.getNotasPorDisciplina().get(disciplina);
         return notas.size() == 3 ? notas.stream().mapToDouble(Double::doubleValue).average().orElse(0) : -1;
     }
 
@@ -176,7 +206,7 @@ public class SGEService extends People{
             System.out.println("📚 " + disciplina + " → Média: " + (media >= 0 ? media : "Ainda faltam notas."));
         }
     }
-    public void lancarNota(Disciplina disciplina,Scanner scan, Student student) {
+    public static void lancarNota(Disciplina disciplina,Scanner scan, Student student) {
         String option;
         do {
             System.out.println("1 - P1\n2- P2\n3 - MAC\nO - VOLTAR");
@@ -185,8 +215,8 @@ public class SGEService extends People{
                 case "1" -> {
                     System.out.println("DIGITE A NOTA: ");
                     String nota = scan.nextLine();
-                    if (isValid.Number(nota)) {
-                        if (isValid.Option(Float.parseFloat(nota),0,20)){
+                    if (Validation.Number(nota)) {
+                        if (Validation.Option(Float.parseFloat(nota),0,20)){
                         atualizarNota(disciplina, 0, Float.parseFloat(nota),student);
                         //NO METODO MAIN CHMAR O METODO QUE IMPRIME AS NOTAS DO ESTUDANTE
                             System.out.println(VERDE+"NOTA LAÇADA"+RESET);
@@ -198,8 +228,8 @@ public class SGEService extends People{
                 case "2" ->{
                     System.out.println("DIGITE A NOTA: ");
                     String nota = scan.nextLine();
-                    if (isValid.Number(nota)) {
-                        if (isValid.Option(Float.parseFloat(nota),0,20)){
+                    if (Validation.Number(nota)) {
+                        if (Validation.Option(Float.parseFloat(nota),0,20)){
                             atualizarNota(disciplina, 1, Float.parseFloat(nota),student);
                             //NO METODO MAIN CHMAR O METODO QUE IMPRIME AS NOTAS DO ESTUDANTE
                             System.out.println(VERDE+"NOTA LAÇADA"+RESET);
@@ -211,8 +241,8 @@ public class SGEService extends People{
                 case "3" ->{
                     System.out.println("DIGITE A NOTA: ");
                     String nota = scan.nextLine();
-                    if (isValid.Number(nota)) {
-                        if (isValid.Option(Float.parseFloat(nota),0,20)){
+                    if (Validation.Number(nota)) {
+                        if (Validation.Option(Float.parseFloat(nota),0,20)){
                             atualizarNota(disciplina, 2, Float.parseFloat(nota),student);
                             //NO METODO MAIN CHMAR O METODO QUE IMPRIME AS NOTAS DO ESTUDANTE
                             System.out.println(VERDE+"NOTA LAÇADA"+RESET);

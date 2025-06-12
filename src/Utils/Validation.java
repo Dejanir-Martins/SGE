@@ -2,7 +2,7 @@ package Utils;
 
 
 public class Validation {
-    public boolean Number(String input) {
+    public static boolean Number(String input) {
         if (input == null || input.trim().isEmpty()) {
             return false;
         }
@@ -14,7 +14,7 @@ public class Validation {
         }
 
     }
-    public boolean Name(String name) {
+    public static boolean Name(String name) {
             if (name == null || name.trim().isEmpty()) {
                 return false; // Rejeita valores nulos ou espaços vazios
             }
@@ -47,14 +47,14 @@ public class Validation {
 
     }
 
-    public boolean Option(float escolha, float min, float max) {
+    public static boolean Option(float escolha, float min, float max) {
         return escolha >= min && escolha <= max;
     }
 
-    public boolean Password(String newPass, String oldPass) {
+    public static boolean Password(String newPass, String oldPass) {
         return newPass != null && !newPass.equals(oldPass) && Name(newPass);
     }
-    public boolean Subject(String subject){
+    public static boolean Subject(String subject){
         return subject!=null && Integer.parseInt(subject) > 1 && Integer.parseInt(subject) < 11;
     }
 }

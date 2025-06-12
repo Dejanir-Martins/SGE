@@ -3,12 +3,12 @@ package Utils;
 import java.util.*;
 
 enum Disciplina {
-    MATEMATICA, FISICA, QUIMICA, HISTORIA, GEOGRAFIA;
+    MATEMATICA, FISICA, QUIMICA, HISTORIA, GEOGRAFIA
 }
 
 class Aluno {
-    private String nome;
-    private Map<Disciplina, List<Double>> notasPorDisciplina;
+    private final String nome;
+    private final Map<Disciplina, List<Double>> notasPorDisciplina;
 
     public Aluno(String nome) {
         this.nome = nome;

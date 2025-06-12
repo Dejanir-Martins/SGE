@@ -6,7 +6,7 @@ import java.util.Map;
 import Core.*;
 
 public class Student extends People{
-    SGEService service = new SGEService();
+    final SGEService service = new SGEService();
 
     private String Name;
     private String PIN;
@@ -16,8 +16,8 @@ public class Student extends People{
     public long Year;
     final ArrayList<String> correio;
     public double[] notas = new double[3];
-    private final ArrayList<Student> listStudent = new ArrayList<>();
-    private Map<Disciplina, List<Double>> notasPorDisciplina;
+    public static final ArrayList<Student> listStudent = new ArrayList<>();
+    private final static Map<Disciplina, List<Double>> notasPorDisciplina = new HashMap<>();
 
 
     public Student(String name,
@@ -33,7 +33,6 @@ public class Student extends People{
         this.Year = year;
         this.Class = aClass;
         correio = new ArrayList<>();
-        this.notasPorDisciplina = new HashMap<>();
         service.inicializarDisciplinas();
     }
 
@@ -58,11 +57,7 @@ public class Student extends People{
         Name = name;
     }
 
-    public ArrayList<Student> getListStudent() {
-        return listStudent;
-    }
-
-    public Map<Disciplina, List<Double>> getNotasPorDisciplina() {
+    public static Map<Disciplina, List<Double>> getNotasPorDisciplina() {
         return notasPorDisciplina;
     }
 }

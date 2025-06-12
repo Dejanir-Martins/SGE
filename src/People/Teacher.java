@@ -7,8 +7,8 @@ public class Teacher {
     private final long id;
     private ArrayList<String> email;
     private String password;
-    public String subject;
-    private final ArrayList<Teacher> listTeachers = new ArrayList<>();
+    public final String subject;
+    public static final ArrayList<Teacher> listTeachers = new ArrayList<>();
 
     public Teacher(String name, long id, String password, String subject) {
         this.name = name;
@@ -35,9 +35,5 @@ public class Teacher {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public ArrayList<Teacher> getListTeachers() {
-        return listTeachers;
     }
 }

@@ -1,33 +1,25 @@
 package Core;
 import java.util.*;
 
-import Main.Main;
 import People.*;
 import Utils.*;
 import static Utils.Colors.*;
 
 public abstract class SGE{
-    protected Student student;
-    protected Teacher teacher;
-    Validation isValid;
-    SGEService service;
-
-    private final String admPass,adminid;{
-        admPass = "SGE2025";
-        adminid = "15031";
-    }
+    private final String admPass = "SGE2025".trim();
+    private final String adminid = "15031".trim();
 
 
     protected void create(String name, String subject){
 
 
-        if (!isValid.Name(name)) {
+        if (!Validation.Name(name)) {
             System.out.println(RED + " O NOME QUE INSERIU É INVÁLIDO. REVEJA POR FAVOR O QUE INTRODUZIU. " + RESET);
             System.out.println();
             return;
         }
-        if (isValid.Number(subject)) {
-            if (!isValid.Subject(subject)) {
+        if (Validation.Number(subject)) {
+            if (!Validation.Subject(subject)) {
                 System.out.println(RED + " O CURSO QUE INSERIU É INVÁLIDO. REVEJA POR FAVOR O QUE INTRODUZIU. " + RESET);
                 return;
             }
@@ -48,26 +40,26 @@ public abstract class SGE{
             case "9" -> subject="ANATOMIA";
             case "10" -> subject="POL";
         }
-        int id = service.gerarID();
+        int id = SGEService.gerarID();
         String pass = id + admPass ;
         System.out.println("ALUNO: " + name.toUpperCase());
         System.out.println("SENHA: " + pass);
         System.out.println("NÚMERO DE IDENTIFICADOR: " + id);
         System.out.println("SUBJECT: " + subject);
         System.out.println(VERDE + "*NOVO PROFESOR ADICIONADO COM SUCESSO*\n" + RESET);
-        teacher.getListTeachers().add(new Teacher(name,id,pass,subject));
+        Teacher.listTeachers.add(new Teacher(name,id,pass,subject));
 
     }
 
     protected void create(String name, String course, String year) {
 
-        if (!isValid.Name(name)) {
+        if (!Validation.Name(name)) {
             System.out.println(RED + " O NOME QUE INSERIU É INVÁLIDO. REVEJA POR FAVOR O QUE INTRODUZIU. " + RESET);
 
             return;
         }
-        if (isValid.Number(course)) {
-            if (!isValid.Option(Integer.parseInt(course),1,4)){
+        if (Validation.Number(course)) {
+            if (!Validation.Option(Integer.parseInt(course),1,4)){
                 System.out.println(RED + " O CURSO QUE INSERIU É INVÁLIDO. REVEJA POR FAVOR O QUE INTRODUZIU. " + RESET);
                 return;
             }
@@ -75,8 +67,8 @@ public abstract class SGE{
             System.out.println(RED + " O CURSO QUE INSERIU É INVÁLIDO. REVEJA POR FAVOR O QUE INTRODUZIU. \n" + RESET);
             return;
         }
-        if (isValid.Number(year)) {
-            if (!isValid.Option(Integer.parseInt(year),10,13)) {
+        if (Validation.Number(year)) {
+            if (!Validation.Option(Integer.parseInt(year),10,13)) {
                 System.out.println(RED + " DIGITE UM ANO DE ESCOLARIDADE VÁLIDO (ENTRE 10 E 13)." + RESET);
                 return;
             }
@@ -107,10 +99,10 @@ String turma = null;
                 System.out.println("ESCOLHA UM CURSO VÁLIDO");
         }
 
-        long process = service.gerarID();
+        long process = SGEService.gerarID();
         String pin = turma + process;
 
-        student.getListStudent().add(new Student(name,pin,process,turma,course,Integer.parseInt(year)));
+        Student.listStudent.add(new Student(name,pin,process,turma,course,Integer.parseInt(year)));
 
         System.out.println("ALUNO: " + name.toUpperCase());
         System.out.println("SENHA: " + pin);
@@ -124,23 +116,23 @@ String turma = null;
 
         if (all && students) {
             System.out.println(VERDE+ "  ---LISTA DE ALUNOS---   \n"+RESET);
-            for (Student studant : student.getListStudent() ) {
+            for (Student studant : Student.listStudent ) {
                 System.out.println(CYAN + " |NOME: "+studant.getName()+" | PROCESSO: "+studant.getProcessNumber()+" |" +
-                        "TURMA: "+studant.getClass()+" | CURSO: "+studant.Course+" | ANO: "+studant.Class+RESET);
+                        "TURMA: "+studant.Class+" | CURSO: "+studant.Course+" | ANO: "+studant.Year+RESET);
             }
 
         }
 
         else if (all && teachers) {
             System.out.println(ROXO + "   --LISTA DE PROFESSORES--  "+RESET);
-            for (Teacher teacher : teacher.getListTeachers()) {
+            for (Teacher teacher : Teacher.listTeachers) {
                 System.out.println(ROXO + " | NOME: "+teacher.getName()+" | IDENTIFICADOR -> "+teacher.getId()+" " +
                         "| DICIPLINA: "+teacher.subject +"    "+RESET);
             }
         }
 
         else {
-            if (isValid.Number(id) && students) {
+            if (Validation.Number(id) && students) {
                 Student studant = findStudent(id);
                 if (studant==null) {
                     System.out.println(YELLOW+"   O ESTUDANTE NÃO FOI ENCONTRADO. \n"+RESET);
@@ -151,7 +143,7 @@ String turma = null;
 
             }
 
-            else if(isValid.Number(id) && teachers) {
+            else if(Validation.Number(id) && teachers) {
                 Teacher teacher = findTeacher(id);
                 if (teacher == null) {
                     System.out.println(YELLOW+" NÃO CONSEGUIMOS ENCONTRAR O PROFESSOR \n "+RESET);
@@ -171,7 +163,7 @@ String turma = null;
 
         if (name){
             updated = "NOME";
-            if (isValid.Name(New)){
+            if (Validation.Name(New)){
                 student.setName(New);
 
             }else {
@@ -181,7 +173,7 @@ String turma = null;
         }
         else if (pass) {
             updated = "PASS-WORD";
-            if (isValid.Password(New,student.getPIN())) {
+            if (Validation.Password(New,student.getPIN())) {
                 student.setPIN(New);
             }else {
                 System.out.println(RED+"PALAVRA-PASSE INVÁLIDA: NÃO DEFINIDA"+RESET);
@@ -190,8 +182,8 @@ String turma = null;
         }
         else if (curs) {
             updated = "CURSO";
-            if( isValid.Number(New))
-            if (isValid.Option(Integer.parseInt(New),1,4)){
+            if( Validation.Number(New))
+            if (Validation.Option(Integer.parseInt(New),1,4)){
 
                 switch (New) {
                     case "1" -> {
@@ -219,11 +211,13 @@ String turma = null;
             }else {
                 System.out.println(RED+"DIGITE UM NÚMERO"+RESET);
             }
+            student.Course=New;
         }//COLOCAR AS OPCOES DE CURSOS
+
         else if (year){
             updated = "ANO";
-            if (isValid.Number(New)){
-                if (isValid.Option(Integer.parseInt(New),10,13)){
+            if (Validation.Number(New)){
+                if (Validation.Option(Integer.parseInt(New),10,13)){
                     student.Year=Integer.parseInt(New);
 
                 }else {
@@ -246,7 +240,7 @@ String turma = null;
 
         if (name){updated = "NOME";
 
-            if (isValid.Name(New)){
+            if (Validation.Name(New)){
                 teacher.setName(New);
 
             }else {
@@ -256,7 +250,7 @@ String turma = null;
         }
         else if (pass) {
             updated = "PASS-WORD";
-            if (isValid.Password(New,teacher.getPassword())) {
+            if (Validation.Password(New,teacher.getPassword())) {
                 teacher.setPassword(New);
             }else {
                 System.out.println(RED+"PALAVRA-PASSE INVÁLIDA: NÃO DEFINIDA"+RESET);
@@ -265,8 +259,8 @@ String turma = null;
         }
        else if (subject) {
             updated = "DISCIPLINA";
-            if(isValid.Number(New))
-            if (isValid.Option(Integer.parseInt(New),0,0)){
+            if(Validation.Number(New))
+            if (Validation.Option(Integer.parseInt(New),0,0)){
                 //COLOCAR AS OPÇÕES DE DISCIPLINA
             }else {
                 System.out.println(YELLOW+"A DISCIPLINA QUE ESCOLHEU É INVÁLIDA"+RESET);
@@ -283,43 +277,43 @@ String turma = null;
     }//PROFESSORES
 
 
-    protected void delete(boolean all,boolean teachers, boolean students) {
-        if (all && students) {
-            student.getListStudent().clear();
+    protected void delete(boolean teachers, boolean students) {
+        if (students) {
+            Student.listStudent.clear();
         }
-        else if (all && teachers) {
-            teacher.getListTeachers().clear();
+        else if (teachers) {
+            Teacher.listTeachers.clear();
         }
 
     }
     protected void delete(boolean teachers, Teacher teacher,Student student) {
         if (teachers) {
-            teacher.getListTeachers().remove(teacher);
+            Teacher.listTeachers.remove(teacher);
             System.out.println(ROXO+"PROFESSOR ELIMINADO!"+RESET);
         }else {
-            student.getListStudent().remove(student);
+            Student.listStudent.remove(student);
             System.out.println(ROXO+"ESTUDANTE ELIMINADO!"+RESET);
         }
     }
 
     protected Student findStudent(String process) {
-        return student.getListStudent().stream()
+        return Student.listStudent.stream()
                 .filter(student -> String.valueOf(student.getProcessNumber()).equals(process))
                 .findFirst().orElse(null);
     }
     protected Teacher findTeacher(String id){
-        return teacher.getListTeachers().stream().filter(teachers -> String.valueOf(teachers.getId()).equals(id))
+        return Teacher.listTeachers.stream().filter(teachers -> String.valueOf(teachers.getId()).equals(id))
                 .findFirst().orElse(null);
     }
 
     protected boolean LoginStudant(String id, String pass){
         if(findStudent(id) != null)
-            return findStudent(id).getPIN().equals(pass) && !   student.getListStudent().isEmpty();
+            return findStudent(id).getPIN().equals(pass) && !   Student.listStudent.isEmpty();
         return false;
     }
     protected boolean LoginTeacher(String id,String pass){
         if(findTeacher(id) != null)
-            return findTeacher(id).getPassword().equals(pass) && !teacher.getListTeachers().isEmpty();
+            return findTeacher(id).getPassword().equals(pass) && !Teacher.listTeachers.isEmpty();
         return false;
     }
     public void add(boolean teacher, boolean studant) {
