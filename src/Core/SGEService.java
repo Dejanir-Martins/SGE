@@ -110,12 +110,68 @@ public class SGEService{
 
     }
 
-    protected void receberNotas(Scanner scan, Student student, String posiction){
-        if (!ehNumero(posiction)) {
-            System.out.println(RED+"INVÁLIDO, DIGITE UM NÚMERO"+RESET);
-            return;
+    public void inicializarDisciplinas() {
+        for (Disciplina disciplina : Disciplina.values()) {
+            student.getNotasPorDisciplina().put(disciplina, new ArrayList<>());
         }
-        student.notas[Integer.parseInt(posiction)-1] = validarEntrada(scan,"NOTA (0 a 20): ");
+    }
+
+   /* public void adicionarNota(Disciplina disciplina, double nota) {
+        List<Double> notas = student.getNotasPorDisciplina().get(disciplina);
+        if (notas.size() < 3) {
+            notas.add(nota);
+            System.out.println("✅ Nota " + nota + " adicionada em " + disciplina);
+        } else {
+            System.out.println("❌ '" + disciplina + "' já tem 3 notas registradas.");
+        }
+    }*/
+
+    public void atualizarNota(Disciplina disciplina, int indice, double novaNota, Student student) {
+        List<Double> notas = student.getNotasPorDisciplina().get(disciplina);
+        if (indice >= 0 && indice < notas.size()) {
+            notas.set(indice, novaNota);
+            System.out.println("🔄 Nota atualizada em " + disciplina + ": " + novaNota);
+        } else {
+            System.out.println("⚠️ Índice inválido! Escolha entre 0, 1 ou 2.");
+        }
+    }
+
+    public double calcularMedia(Disciplina disciplina) {
+        List<Double> notas = student.getNotasPorDisciplina().get(disciplina);
+        return notas.size() == 3 ? notas.stream().mapToDouble(Double::doubleValue).average().orElse(0) : -1;
+    }
+
+    public void mostrarMedias(Student student) {
+        System.out.println("📊 Médias das disciplinas de " + student.getName() + ":");
+        for (Disciplina disciplina : Disciplina.values()) {
+            double media = calcularMedia(disciplina);
+            System.out.println("📚 " + disciplina + " → Média: " + (media >= 0 ? media : "Ainda faltam notas."));
+        }
+    }
+    public void lancarNota(Disciplina disciplina,Scanner scan, Student student) {
+        String option;
+        do {
+            System.out.println("1 - P1\n2- P2\n3 - MAC\nO - VOLTAR");
+            option = scan.nextLine();
+            switch (option) {
+                case "1" -> {
+                    System.out.println("DIGITE A NOTA: ");
+                    String nota = scan.nextLine();
+                    if (isValid.Number(nota)) {
+                        if (isValid.Option(Float.parseFloat(nota),0,20)){
+                        atualizarNota(disciplina, 0, Float.parseFloat(nota),student);
+                        //NO METODO MAIN CHMAR O METODO QUE IMPRIME AS NOTAS DO ESTUDANTE
+                            System.out.println(VERDE+"NOTA LAÇADA"+RESET);
+                        }else System.out.println(YELLOW+"DIGITE UMA NOTA DE O - 20"+RESET);
+                    }else {
+                        System.out.println(YELLOW+"DIGITE UMA NOTA VÁLIDA, DE PREFERENCIA NÚMEROS"+RESET);
+                    }
+                }
+            }
+        }while (!option.equals("0"));
+
+
+
     }
 
     public void enviarMensagem(String de, String para, String conteudo) {
