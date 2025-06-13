@@ -4,6 +4,8 @@ import Main.Main;
 import People.*;
 import Utils.Validation;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -94,18 +96,6 @@ public class SGEService extends People {
             }
         } while (!option.equals("0"));
     }
-
-    public void lancarNotas(Student aluno, String nomeDisciplina, float p1, float p2, float mac) {
-        Subject disciplina = aluno.findSubject(nomeDisciplina);
-
-        if (disciplina != null) {
-            disciplina.setNotas(p1, p2, mac);
-            System.out.println("Notas atualizadas com sucesso.");
-        } else {
-            aluno.addSubject(new Subject(nomeDisciplina, p1, p2, mac));
-            System.out.println("Disciplina adicionada e notas lançadas com sucesso.");
-        }
-    }
     public void mostrarNotas(Student aluno) {
         System.out.println("Notas do aluno: " + aluno.getName());
 
@@ -147,7 +137,6 @@ public class SGEService extends People {
         String option;
         Subject materia = student.findSubject(disciplina);
 
-        // Se a disciplina ainda não existe no aluno, adicionamos com notas 0
         if (materia == null) {
             materia = new Subject(disciplina, 0, 0, 0);
             student.addSubject(materia);
@@ -263,6 +252,7 @@ public class SGEService extends People {
                 default -> System.out.println(RED + "OPÇÃO INVÁLIDA." + RESET);
             }
         } while (!option.equals("0"));
+
     }
 
     static void disciplinas() {
@@ -277,5 +267,56 @@ public class SGEService extends People {
         System.out.println("9 - ANATOMIA");
         System.out.println("10 - FAI");
     }
+
+    public static void gerarRelatorioNotas(List<Student> listaAlunos) {
+        final float MEDIA_MINIMA = 10.0f;
+        System.out.println(VERDE+"==== RELATÓRIO DE NOTAS ===="+RESET);
+
+        for (Student aluno : listaAlunos) {
+            System.out.println("\nAluno: " + aluno.getName() + " | Processo: " + aluno.getProcessNumber());
+            boolean reprovado = false;
+
+            for (Subject disciplina : aluno.getsubjects()) {
+                float media = (float) disciplina.getMedia();
+                String estado = media >= MEDIA_MINIMA ? (BLUE+"TRANSITA"+RESET) :    (RED+"NÃO TRANSITA"+RESET);
+                if (media < MEDIA_MINIMA) reprovado = true;
+
+                System.out.printf("Disciplina: %-15s | P1: %.1f | P2: %.1f | MAC: %.1f | Média: %.1f -> %s\n",
+                        disciplina.getName(), disciplina.getP1(), disciplina.getP2(), disciplina.getMAC(), media, estado);
+            }
+
+            String statusFinal = reprovado ? (RED+"REPROVADO"+RESET) : (VERDE+"APROVADO"+RESET);
+            System.out.println("Resultado Final: " + reprovado + statusFinal +RESET);
+            System.out.println("--------------------------------------------------");
+        }
+    }
+    public static void salvarRelatorioTxt(List<Student> listaAlunos, String caminhoFicheiro) {
+        try (PrintWriter writer = new PrintWriter(caminhoFicheiro)) {
+            writer.println("==== RELATÓRIO DE NOTAS ====");
+
+            for (Student aluno : listaAlunos) {
+                writer.println("\nAluno: " + aluno.getName() + " | Processo: " + aluno.getProcessNumber());
+                boolean reprovado = false;
+
+                for (Subject disciplina : aluno.getsubjects()) {
+                    float media = (float) disciplina.getMedia();
+                    String estado = media >= 10.0 ? "APROVADO" : "REPROVADO";
+                    if (media < 10.0) reprovado = true;
+
+                    writer.printf("Disciplina: %-15s | P1: %.1f | P2: %.1f | MAC: %.1f | Média: %.1f -> %s\n",
+                            disciplina.getName(), disciplina.getP1(), disciplina.getP2(), disciplina.getMAC(), media, estado);
+                }
+
+                String statusFinal = reprovado ? "REPROVADO" : "APROVADO";
+                writer.println("Resultado Final: " + statusFinal);
+                writer.println("--------------------------------------------------");
+            }
+
+            System.out.println("Relatório salvo com sucesso em: " + caminhoFicheiro);
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar o relatório: " + e.getMessage());
+        }
+    }
+
 
 }

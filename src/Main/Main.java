@@ -33,7 +33,7 @@ public class Main extends SGE {
                 menuChoice = scan.nextLine().trim();
 
                 switch (menuChoice) {
-                    case "1" -> runCliMode(system, service, scan);
+                    case "1" -> CliMode(system, service, scan);
                     case "2" ->{
                         out.println("[GUI MODE]");
                         SwingUtilities.invokeLater(() -> new LoginScreen(system).setVisible(true));
@@ -50,7 +50,7 @@ public class Main extends SGE {
         scan.close();
     }
 
-    private static void runCliMode(Main system, SGEService service, Scanner scan) {
+    private static void CliMode(Main system, SGEService service, Scanner scan) {
         String menuChoice;
         do {
             out.println("\n--- BEM-VINDO AO SISTEMA DE GESTÃO ESCOLAR ---");
@@ -62,14 +62,14 @@ public class Main extends SGE {
             menuChoice = scan.nextLine().trim();
 
             if (menuChoice.equals("1")) {
-                handleLogin(system, service, scan);
+                Login(system, service, scan);
             } else if (!menuChoice.equals("2")) {
                 out.println(YELLOW + "OPÇÃO INVÁLIDA! ESCOLHA ENTRE 1 E 2." + RESET);
             }
         } while (!menuChoice.equals("2"));
     }
 
-    private static void handleLogin(Main system, SGEService service, Scanner scan) {
+    private static void Login(Main system, SGEService service, Scanner scan) {
         int attempts = 0;
         boolean success = false;
 
@@ -95,14 +95,14 @@ public class Main extends SGE {
 
                 if (!Student.listStudent.isEmpty() && system.LoginStudent(id, pass)) {
                     Student student = system.findStudent(id);
-                    runStudentMode(student, scan);
+                    StudentMode(student, scan);
                     success = true;
                 } else if (!Teacher.listTeachers.isEmpty() && system.LoginTeacher(id, pass)) {
                     Teacher teacher = system.findTeacher(id);
-                    runTeacherMode(system, service, teacher, scan);
+                    TeacherMode(system, service, teacher, scan);
                     success = true;
                 } else if (id.equals(system.getAdminid()) && pass.equals(system.getAdmPass())) {
-                    runAdminMode(system, scan);
+                    AdminMode(system, scan);
                     success = true;
                 } else {
                     out.println(RED + "IDENTIFICADOR OU SENHA INVÁLIDOS." + RESET);
@@ -121,26 +121,26 @@ public class Main extends SGE {
         }
     }
 
-    private static void runStudentMode(Student student, Scanner scan) {
+    private static void StudentMode(Student student, Scanner scan) {
         String alunoOp;
         do {
             try {
                 out.println("\nPERFIL: -> " + VERDE + student.getName() + RESET);
                 verificarNotificacoes(student);
                 out.println("1 - VER NOTAS");
-                out.println("2 - ENVIAR MENSAGEM");
+                out.println("2 - CHAT");
                 out.println("3 - VOLTAR");
                 out.print("OPÇÃO: ");
                 alunoOp = scan.nextLine();
 
                 switch (alunoOp) {
                     case "1" -> {
-                        out.println("INFORME A DISCIPLINA:");
-                        for (People.Disciplina d : People.Disciplina.values()) {
-                            out.println(d.name());
-                        }
-                        scan.nextLine(); // simula a leitura da disciplina
-                        out.println(student.getNotasPorDisciplina());
+                        if (!student.getsubjects().isEmpty()){
+                            for (People.Subject subject : student.getsubjects()){
+                                System.out.printf("BOLETIN\n\nDISCIPLINA -> : %s | P1: %.1f | P2: %.1f | MAC: %.1f | Média: %.1f -> %s\n",
+                                        subject.getName(), subject.getP1(), subject.getP2(), subject.getMAC(), subject.getMedia());
+                            }
+                        }else out.println("AINDA NÃO FOI LANÇADA NENHUMA NOTA");
                     }
                     case "2" -> menuMensagens(student,scan);
                     case "3" -> out.println("Saindo do modo aluno...");
@@ -153,7 +153,7 @@ public class Main extends SGE {
         } while (!alunoOp.equals("3"));
     }
 
-    private static void runTeacherMode(Main system, SGEService service, Teacher teacher, Scanner scan) {
+    private static void TeacherMode(Main system, SGEService service, Teacher teacher, Scanner scan) {
         String profOp;
         do {
             try {
@@ -162,7 +162,7 @@ public class Main extends SGE {
                 out.println("1 - LANÇAR NOTA");
                 out.println("2 - VER LISTA DE ALUNOS");
                 out.println("4 - SAIR");
-                out.println("5 - MENSAGENS");
+                out.println("5 - CHAT");
                 out.print("OPÇÃO: ");
                 profOp = scan.nextLine();
 
@@ -196,7 +196,7 @@ public class Main extends SGE {
         } while (!profOp.equals("4"));
     }
 
-    private static void runAdminMode(Main system, Scanner scan) {
+    private static void AdminMode(Main system, Scanner scan) {
         String adminChoice;
         do {
             try {
@@ -205,11 +205,22 @@ public class Main extends SGE {
                 out.println("1 - CADASTRAR");
                 out.println("2 - LISTAR");
                 out.println("3 - ATUALIZAR");
+                out.println("4 - GERAR RELATORIO");
                 out.println("0 - SAIR");
                 out.print("OPÇÃO: ");
                 adminChoice = scan.nextLine().trim();
 
                 switch (adminChoice) {
+                    case "4" -> {
+                        if (!Student.listStudent.isEmpty()) {
+                        SGEService.gerarRelatorioNotas(Student.listStudent);
+                        System.out.println("DESEJA SALVAR O RELATORIO EM TXT\nS/N");
+                        adminChoice = scan.nextLine().trim();
+                        if (adminChoice.equalsIgnoreCase("s")){
+                            SGEService.salvarRelatorioTxt(Student.listStudent,"Relatorio.txt");
+                        }
+                        }else out.println("DEVES ADICIONAR PELO MENOS UM ALUNO NO SISTEMA");
+                    }
                     case "1" -> {
                         out.println("DESEJA CADASTRAR UM NOVO: \n 1 - ALUNO OU 2 - PROFESSOR X - VOLTAR");
                         String escolha = scan.nextLine().trim().toLowerCase();

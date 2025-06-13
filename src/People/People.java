@@ -43,7 +43,7 @@ public abstract class People {
     public int getMensagensNaoLidas() {
         return inbox.size() - message;
     }
-    protected static class Subject {
+    public static class Subject {
             private final String name;
             private double p1;
             private double p2;
