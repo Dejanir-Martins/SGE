@@ -1,63 +1,60 @@
 package People;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import Core.*;
 
-public class Student extends People{
-    final SGEService service = new SGEService();
+public class Student extends People {
+    private final long processNumber;
+    private String course;
+    private String studentClass;
+    private long year;
+    private final Map<Disciplina, List<Double>> notasPorDisciplina = new HashMap<>();
 
-    private String Name;
-    private String PIN;
-    private final long ProcessNumber;
-    public String Class;
-    public String Course;
-    public long Year;
-    final ArrayList<String> correio;
-    public double[] notas = new double[3];
-    public static final ArrayList<Student> listStudent = new ArrayList<>();
-    private final static Map<Disciplina, List<Double>> notasPorDisciplina = new HashMap<>();
+    public static final List<Student> listStudent = new ArrayList<>();
 
-
-    public Student(String name,
-                   String pass,
-                   long process,
-                   String aClass,
-                   String curs,
-                   long year) {
-        this.Name = name;
-        this.Course = curs;
-        this.ProcessNumber = process;
-        this.PIN = pass;
-        this.Year = year;
-        this.Class = aClass;
-        correio = new ArrayList<>();
-        service.inicializarDisciplinas();
+    public Student(String name, String password, long processNumber, String studentClass, String course, long year) {
+        this.name = name;
+        this.password = password;
+        this.processNumber = processNumber;
+        this.course = course;
+        this.studentClass = studentClass;
+        this.year = year;
+        for (Disciplina d : Disciplina.values()) {
+            notasPorDisciplina.put(d, new ArrayList<>());
+        }
     }
 
     public long getProcessNumber() {
-        return ProcessNumber;
-
+        return processNumber;
     }
 
-    public String getPIN() {
-        return PIN;
+    public String getCourse() {
+        return course;
     }
 
-    public void setPIN(String PIN) {
-        this.PIN = PIN;
+    public void setCourse(String course) {
+        this.course = course;
     }
 
-    public String getName() {
-        return Name;
+    public String getStudentClass() {
+        return studentClass;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public void setStudentClass(String studentClass) {
+        this.studentClass = studentClass;
     }
 
-    public static Map<Disciplina, List<Double>> getNotasPorDisciplina() {
+    public long getYear() {
+        return year;
+    }
+
+    public void setYear(long year) {
+        this.year = year;
+    }
+
+    public Map<Disciplina, List<Double>> getNotasPorDisciplina() {
         return notasPorDisciplina;
     }
 }

@@ -1,39 +1,29 @@
 package People;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Teacher {
-    private String name;
+public class Teacher extends People {
     private final long id;
-    private ArrayList<String> email;
-    private String password;
-    public final String subject;
-    public static final ArrayList<Teacher> listTeachers = new ArrayList<>();
+    private String disciplina;
+    public static final List<Teacher> listTeachers = new ArrayList<>();
 
-    public Teacher(String name, long id, String password, String subject) {
+    public Teacher(String name, long id, String password, String disciplina) {
         this.name = name;
         this.id = id;
         this.password = password;
-        this.subject = subject;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        this.disciplina = disciplina;
     }
 
     public long getId() {
         return id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getDisciplina() {
+        return disciplina;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDisciplina(String disciplina) {
+        this.disciplina = disciplina;
     }
 }
