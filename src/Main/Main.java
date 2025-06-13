@@ -137,8 +137,8 @@ public class Main extends SGE {
                     case "1" -> {
                         if (!student.getsubjects().isEmpty()){
                             for (People.Subject subject : student.getsubjects()){
-                                System.out.printf("BOLETIN\n\nDISCIPLINA -> : %s | P1: %.1f | P2: %.1f | MAC: %.1f | Média: %.1f -> %s\n",
-                                        subject.getName(), subject.getP1(), subject.getP2(), subject.getMAC(), subject.getMedia());
+                                //noinspection MalformedFormatString
+                                System.out.printf("BOLETIN\n\nDISCIPLINA ->  %-15s | P1: %.1f | P2: %.1f | MAC: %.1f | Média: %.1f -> %s\n", subject.getName(), subject.getP1(), subject.getP2(), subject.getMAC(), subject.getMedia());
                             }
                         }else out.println("AINDA NÃO FOI LANÇADA NENHUMA NOTA");
                     }

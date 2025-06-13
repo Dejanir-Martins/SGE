@@ -12,7 +12,7 @@ public class Student extends People {
     private long year;
     private final Map<Disciplina, List<Double>> notasPorDisciplina = new HashMap<>();
     public static final List<Student> listStudent = new ArrayList<>();
-    private List<Subject> subjects;
+    private final List<Subject> subjects;
 
     public Student(String name, String password, long processNumber, String studentClass, String course, long year) {
         this.name = name;

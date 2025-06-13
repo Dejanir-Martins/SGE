@@ -2,17 +2,16 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+
 import Core.SGE;
 import People.Student;
 import People.Teacher;
 
 public class LoginScreen extends JFrame {
 
-    private JTextField idField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
-    private SGE sistema;
+    private final JTextField idField;
+    private final JPasswordField passwordField;
+    private final SGE sistema;
 
     public LoginScreen(SGE sistema) {
         this.sistema = sistema;
@@ -36,7 +35,7 @@ public class LoginScreen extends JFrame {
 
         idField = new JTextField();
         passwordField = new JPasswordField();
-        loginButton = new JButton("Entrar");
+        JButton loginButton = new JButton("Entrar");
 
         idField.setFont(new Font("Arial", Font.PLAIN, 14));
         passwordField.setFont(new Font("Arial", Font.PLAIN, 14));

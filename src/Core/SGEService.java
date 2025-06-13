@@ -77,8 +77,12 @@ public class SGEService extends People {
                 }
                 case "4" -> {
                     System.out.print("NOVO CURSO: ");
+                    System.out.println("1 - INFORMÁTICA");
+                    System.out.println("2 - ELETRÔNICA E TELECOMUNICAÇÕES");
+                    System.out.println("3 - ELETROMEDICINA");
+                    System.out.println("4 - INFORMÁTICA E MULTIMÉDIA");
                     String curso = scan.nextLine();
-                    if (Validation.Name(curso)) {
+                    if (Validation.Number(curso)) {
                         result = system.update(aluno, false, true, false, false, curso);
                         System.out.println(result);
                     } else System.out.println(RED + "CURSO INVÁLIDO" + RESET);

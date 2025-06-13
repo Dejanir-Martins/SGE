@@ -23,19 +23,7 @@ public class SGEGUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel welcomeLabel = new JLabel();
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
-
-        if (isAdmin) {
-            welcomeLabel.setText("Bem-vindo, Administrador");
-        } else if (loggedStudent != null) {
-            welcomeLabel.setText("Bem-vindo, Aluno: " + loggedStudent.getName());
-        } else if (loggedTeacher != null) {
-            welcomeLabel.setText("Bem-vindo, Professor: " + loggedTeacher.getName());
-        }
-
-        topPanel.add(welcomeLabel);
+        JPanel topPanel = getJPanel(isAdmin);
         add(topPanel, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new GridLayout(3, 3, 15, 15));
@@ -82,6 +70,23 @@ public class SGEGUI extends JFrame {
         });
 
         setVisible(true);
+    }
+
+    private JPanel getJPanel(boolean isAdmin) {
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel welcomeLabel = new JLabel();
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        if (isAdmin) {
+            welcomeLabel.setText("Bem-vindo, Administrador");
+        } else if (loggedStudent != null) {
+            welcomeLabel.setText("Bem-vindo, Aluno: " + loggedStudent.getName());
+        } else if (loggedTeacher != null) {
+            welcomeLabel.setText("Bem-vindo, Professor: " + loggedTeacher.getName());
+        }
+
+        topPanel.add(welcomeLabel);
+        return topPanel;
     }
 
     private void mostrarPerfil() {

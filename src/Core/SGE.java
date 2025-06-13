@@ -19,7 +19,7 @@ public abstract class SGE{
         }
         if (Validation.Number(subject)) {
             if (!Validation.Subject(subject)) {
-                System.out.println(RED + " O CURSO QUE INSERIU É INVÁLIDO. REVEJA POR FAVOR O QUE INTRODUZIU. " + RESET);
+                System.out.println(RED + " A DISCIPLINA QUE INSERIU É INVÁLIDO. REVEJA POR FAVOR O QUE INTRODUZIU. " + RESET);
                 return;
             }
         } else {
@@ -40,7 +40,7 @@ public abstract class SGE{
         }
         int id = SGEService.gerarID();
         String pass = id + admPass ;
-        System.out.println("ALUNO: " + name.toUpperCase());
+        System.out.println("PROFESSOR: " + name.toUpperCase());
         System.out.println("SENHA: " + pass);
         System.out.println("NÚMERO DE IDENTIFICADOR: " + id);
         System.out.println("SUBJECT: " + subject);
@@ -149,8 +149,10 @@ public abstract class SGE{
                             New = "INFORMÁTICA E MULTIMÍDIA";
                             student.setStudentClass("M");
                         }
-                        default ->
-                                System.out.println("ESCOLHA UM CURSO VÁLIDO");
+                        default -> {
+                            System.out.println("ESCOLHA UM CURSO VÁLIDO");
+                            return RED + "ERRO NA ATUALIZAÇÃO: CURSO" + RESET;
+                        }
                     }
                 }else {
                     System.out.println(YELLOW+"O NOVO CURSO QUE ESCOLHEU É INVÁLIDO"+RESET);

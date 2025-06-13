@@ -7,7 +7,6 @@ public abstract class People {
     protected String name;
     protected String password;
     private static final List<String> inbox = new ArrayList<>();
-    public ArrayList<Subject> subjects = new ArrayList<>();
 
     public List<String> getInbox() {
         return inbox;

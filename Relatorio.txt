@@ -1,5 +1,11 @@
 ==== RELATÓRIO DE NOTAS ====
 
-Aluno: Dejanir | Processo: 15063
+Aluno: DEJNAIR | Processo: 15146
+Disciplina: FAI             | P1: 12,0 | P2: 13,0 | MAC: 14,0 | Média: 13,0 -> APROVADO
+Disciplina: QUÍMICA         | P1: 20,0 | P2: 20,0 | MAC: 14,0 | Média: 18,0 -> APROVADO
+Resultado Final: APROVADO
+--------------------------------------------------
+
+Aluno: ANALTINA | Processo: 15850
 Resultado Final: APROVADO
 --------------------------------------------------
