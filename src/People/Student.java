@@ -11,8 +11,8 @@ public class Student extends People {
     private String studentClass;
     private long year;
     private final Map<Disciplina, List<Double>> notasPorDisciplina = new HashMap<>();
-
     public static final List<Student> listStudent = new ArrayList<>();
+    private List<Subject> subjects;
 
     public Student(String name, String password, long processNumber, String studentClass, String course, long year) {
         this.name = name;
@@ -21,9 +21,16 @@ public class Student extends People {
         this.course = course;
         this.studentClass = studentClass;
         this.year = year;
-        for (Disciplina d : Disciplina.values()) {
-            notasPorDisciplina.put(d, new ArrayList<>());
+        subjects = new ArrayList<>();
+    }
+    public List<Subject> getsubjects() { return subjects; }
+    public void addSubject(Subject s) { subjects.add(s); }
+
+    public Subject findSubject(String name) {
+        for (Subject s : subjects) {
+            if (s.getName().equalsIgnoreCase(name)) return s;
         }
+        return null;
     }
 
     public long getProcessNumber() {
@@ -57,4 +64,5 @@ public class Student extends People {
     public Map<Disciplina, List<Double>> getNotasPorDisciplina() {
         return notasPorDisciplina;
     }
+
 }

@@ -95,35 +95,31 @@ public class SGEService extends People {
         } while (!option.equals("0"));
     }
 
-    public void inicializarDisciplinas(Student aluno) {
-        for (Disciplina disciplina : Disciplina.values()) {
-            List<Double> notas = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0));
-            aluno.getNotasPorDisciplina().put(disciplina, notas);
-        }
-    }
+    public void lancarNotas(Student aluno, String nomeDisciplina, float p1, float p2, float mac) {
+        Subject disciplina = aluno.findSubject(nomeDisciplina);
 
-    public static void atualizarNota(Disciplina disciplina, int indice, double novaNota, Student student) {
-        List<Double> notas = student.getNotasPorDisciplina().get(disciplina);
-        if (indice >= 0 && indice < notas.size()) {
-            notas.set(indice, novaNota);
-            System.out.println("🔄 Nota atualizada em " + disciplina + ": " + novaNota);
+        if (disciplina != null) {
+            disciplina.setNotas(p1, p2, mac);
+            System.out.println("Notas atualizadas com sucesso.");
         } else {
-            System.out.println("⚠️ Índice inválido! Escolha entre 0, 1 ou 2.");
+            aluno.addSubject(new Subject(nomeDisciplina, p1, p2, mac));
+            System.out.println("Disciplina adicionada e notas lançadas com sucesso.");
+        }
+    }
+    public void mostrarNotas(Student aluno) {
+        System.out.println("Notas do aluno: " + aluno.getName());
+
+        for (Subject s : aluno.getsubjects()) {
+            System.out.println("- Disciplina: " + s.getName());
+            System.out.println("  P1: " + s.getP1());
+            System.out.println("  P2: " + s.getP2());
+            System.out.println("  MAC: " + s.getMAC());
+            System.out.println("  Média: " + s.getMedia());
+            System.out.println();
         }
     }
 
-    public double calcularMedia(Disciplina disciplina, Student aluno) {
-        List<Double> notas = aluno.getNotasPorDisciplina().get(disciplina);
-        return notas.stream().mapToDouble(Double::doubleValue).average().orElse(-1);
-    }
 
-    public void mostrarMedias(Student aluno) {
-        System.out.println("📊 Médias de " + aluno.getName() + ":");
-        for (Disciplina disciplina : Disciplina.values()) {
-            double media = calcularMedia(disciplina, aluno);
-            System.out.println("📚 " + disciplina + " → Média: " + (media >= 0 ? media : "Notas insuficientes"));
-        }
-    }
 
     public static void enviarMensagem(People remetente, People destinatario, String mensagem) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -142,45 +138,89 @@ public class SGEService extends People {
             for (String mensagem : correio) {
                 System.out.println(mensagem);
             }
-            pessoa.setMensagensLidas(correio.size()); // Marca todas como lidas
+            pessoa.setMessage(correio.size()); // Marca todas como lidas
         }
     }
 
 
-    public static void lancarNota(Disciplina disciplina, Scanner scan, Student student) {
+    public void lancarNota(String disciplina, Scanner scan, Student student) {
         String option;
+        Subject materia = student.findSubject(disciplina);
+
+        // Se a disciplina ainda não existe no aluno, adicionamos com notas 0
+        if (materia == null) {
+            materia = new Subject(disciplina, 0, 0, 0);
+            student.addSubject(materia);
+            System.out.println(VERDE + "Disciplina adicionada ao aluno." + RESET);
+        }
+
         do {
+            mostrarNotas(student); // Mostra sempre as notas atualizadas
+            System.out.println("\nQual nota deseja lançar para " + disciplina + "?");
             System.out.println("1 - P1\n2 - P2\n3 - MAC\n0 - VOLTAR");
             option = scan.nextLine().trim();
+
+            if (!Validation.Number(option)) {
+                System.out.println(RED + "ENTRADA INVÁLIDA. DIGITE UM NÚMERO." + RESET);
+                continue;
+            }
+
             switch (option) {
                 case "1", "2", "3" -> {
-                    int indice = Integer.parseInt(option) - 1;
-                    System.out.print("DIGITE A NOTA: ");
-                    String nota = scan.nextLine();
+                    System.out.print("DIGITE A NOVA NOTA (0 - 20): ");
+                    String nota = scan.nextLine().trim();
                     if (Validation.Number(nota)) {
                         float valor = Float.parseFloat(nota);
                         if (Validation.Option(valor, 0, 20)) {
-                            atualizarNota(disciplina, indice, valor, student);
-                            System.out.println(VERDE + "NOTA LANÇADA" + RESET);
-                        } else System.out.println(YELLOW + "NOTA FORA DO INTERVALO 0-20" + RESET);
+                            float p1 = (float) materia.getP1();
+                            float p2 = (float) materia.getP2();
+                            float mac = (float) materia.getMAC();
+
+                            switch (option) {
+                                case "1" -> p1 = valor;
+                                case "2" -> p2 = valor;
+                                case "3" -> mac = valor;
+                            }
+
+                            materia.setNotas(p1, p2, mac);
+                            System.out.println(VERDE + "NOTA LANÇADA COM SUCESSO!" + RESET);
+                        } else {
+                            System.out.println(YELLOW + "NOTA FORA DO INTERVALO 0-20." + RESET);
+                        }
                     } else {
-                        System.out.println(YELLOW + "INSIRA UM NÚMERO VÁLIDO" + RESET);
+                        System.out.println(YELLOW + "INSIRA UM NÚMERO VÁLIDO." + RESET);
                     }
                 }
+                case "0" -> System.out.println(VERDE + "RETORNANDO AO MENU ANTERIOR..." + RESET);
+                default -> System.out.println(RED + "OPÇÃO INVÁLIDA." + RESET);
             }
+
         } while (!option.equals("0"));
     }
+
     public static void Update(Teacher teacher, Scanner scan, String identify, Main system) {
         String option;
+
         do {
             system.show(false, true, false, identify);
             System.out.println("ESCOLHA UMA OPÇÃO DE ATUALIZAÇÃO:");
-            System.out.println("1 - NOME\n2 - SENHA\n3 - ELIMINAR\n0 - VOLTAR");
+            System.out.println("1 - NOME\n2 - SENHA\n3 - ELIMINAR\n4 - DISCIPLINA\n0 - VOLTAR");
             System.out.print("OPÇÃO: ");
             option = scan.nextLine().trim();
 
             String result;
             switch (option) {
+                case "4" ->{
+                    System.out.println("ESCOLHA A NOVA DISCIPLINA");
+                    disciplinas();
+                    String subject = scan.nextLine();
+                    if (Validation.Number(subject)) {
+                        if (Validation.Option(Integer.parseInt(subject), 1, 10)) {
+                            result = system.update(teacher,false,true,false,subject);
+                            System.out.println(result);
+                        }
+                    }
+                }
                 case "1" -> {
                     System.out.print("NOVO NOME: ");
                     String nome = scan.nextLine();
@@ -223,6 +263,19 @@ public class SGEService extends People {
                 default -> System.out.println(RED + "OPÇÃO INVÁLIDA." + RESET);
             }
         } while (!option.equals("0"));
+    }
+
+    static void disciplinas() {
+        System.out.println("1 - MATEMÁTICA");
+        System.out.println("2 - QUÍMICA");
+        System.out.println("3 - INGLÊS");
+        System.out.println("4 - FÍSICA");
+        System.out.println("5 - ELETROTECNIA");
+        System.out.println("6 - INFORMÁTICA");
+        System.out.println("7 - SEAC");
+        System.out.println("8 - PORTUGUES");
+        System.out.println("9 - ANATOMIA");
+        System.out.println("10 - FAI");
     }
 
 }

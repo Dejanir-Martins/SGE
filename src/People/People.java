@@ -7,26 +7,15 @@ public abstract class People {
     protected String name;
     protected String password;
     private static final List<String> inbox = new ArrayList<>();
+    public ArrayList<Subject> subjects = new ArrayList<>();
 
     public List<String> getInbox() {
         return inbox;
     }
 
     public enum Disciplina {
-        MATEMATICA, FISICA, QUIMICA, HISTORIA, GEOGRAFIA
-    }
+        FISICA, GEOGRAFIA, HISTORIA, MATEMATICA, QUIMICA
 
-    public void sendMessage(People recipient, String message) {
-        inbox.add("De " + this.name + ": " + message);
-    }
-
-    public void viewInbox() {
-        if (inbox.isEmpty()) {
-            System.out.println("📭 Sua caixa de mensagens está vazia.");
-        } else {
-            System.out.println("📬 Caixa de entrada:");
-            inbox.forEach(System.out::println);
-        }
     }
 
     public String getName() {
@@ -44,19 +33,64 @@ public abstract class People {
     public void setPassword(String password) {
         this.password = password;
     }
-    private int mensagensLidas = 0;
+    private int message = 0;
 
-    public int getMensagensLidas() {
-        return mensagensLidas;
-    }
 
-    public void setMensagensLidas(int mensagensLidas) {
-        this.mensagensLidas = mensagensLidas;
+    public void setMessage(int message) {
+        this.message = message;
     }
 
     public int getMensagensNaoLidas() {
-        return inbox.size() - mensagensLidas;
+        return inbox.size() - message;
+    }
+    protected static class Subject {
+            private final String name;
+            private double p1;
+            private double p2;
+            private double MAC;
+            private double media;
+
+            public Subject(String name, double p1, double p2, double MAC) {
+                this.name = name;
+                this.p1 = p1;
+                this.p2 = p2;
+                this.MAC = MAC;
+                this.media = calcularMedia();
+            }
+
+            private double calcularMedia() {
+                return (p1 + p2 + MAC) / 3;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public double getP1() {
+                return p1;
+            }
+
+            public double getP2() {
+                return p2;
+            }
+
+            public double getMAC() {
+                return MAC;
+            }
+
+            public double getMedia() {
+                return media;
+            }
+
+            public void setNotas(double p1, double p2, double MAC) {
+                this.p1 = p1;
+                this.p2 = p2;
+                this.MAC = MAC;
+                this.media = calcularMedia();
+            }
+        }
+
+
     }
 
-}
 

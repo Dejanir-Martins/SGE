@@ -2,9 +2,11 @@ package Main;
 
 import Core.SGE;
 import Core.SGEService;
+import GUI.LoginScreen;
 import People.*;
 import Utils.Validation;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 import static Core.SGEService.Update;
@@ -32,7 +34,11 @@ public class Main extends SGE {
 
                 switch (menuChoice) {
                     case "1" -> runCliMode(system, service, scan);
-                    case "2" -> out.println("[GUI MODE COMING SOON]");
+                    case "2" ->{
+                        out.println("[GUI MODE]");
+                        SwingUtilities.invokeLater(() -> new LoginScreen(system).setVisible(true));
+                    }
+
                     case "0" -> out.println("EXITING...");
                     default -> out.println(ROXO + "Please enter a valid choice!" + RESET);
                 }
@@ -87,7 +93,7 @@ public class Main extends SGE {
                     continue;
                 }
 
-                if (!Student.listStudent.isEmpty() && system.LoginStudant(id, pass)) {
+                if (!Student.listStudent.isEmpty() && system.LoginStudent(id, pass)) {
                     Student student = system.findStudent(id);
                     runStudentMode(student, scan);
                     success = true;
@@ -172,8 +178,9 @@ public class Main extends SGE {
                         String proc = scan.nextLine();
                         Student student1 = system.findStudent(proc);
                         if (student1 != null) {
-                            SGEService.lancarNota(People.Disciplina.FISICA, scan, student1);
-                            service.mostrarMedias(student1);
+
+                            service.lancarNota(teacher.getSubject(), scan, student1);
+                            service.mostrarNotas(student1);
                         } else {
                             out.println(YELLOW + "ALUNO NÃO ENCONTRADO" + RESET);
                         }

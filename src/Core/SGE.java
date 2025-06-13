@@ -3,6 +3,8 @@ import java.util.*;
 
 import People.*;
 import Utils.*;
+
+import static Core.SGEService.disciplinas;
 import static Utils.Colors.*;
 
 public abstract class SGE{
@@ -34,7 +36,7 @@ public abstract class SGE{
             case "7" -> subject="SEAC";
             case "8" -> subject="PORTUGUES";
             case "9" -> subject="ANATOMIA";
-            case "10" -> subject="POL";
+            case "10" -> subject="FAI";
         }
         int id = SGEService.gerarID();
         String pass = id + admPass ;
@@ -102,8 +104,7 @@ public abstract class SGE{
         System.out.println(VERDE + "---*ALUNO CADASTRADO COM SUCESSO*---" + RESET);
     }
 
-    // Demais métodos mantidos como estão
-    protected  String update(Student student, boolean name, boolean curs, boolean year,boolean pass, String New){
+    public String update(Student student, boolean name, boolean curs, boolean year, boolean pass, String New){
         String updated = "INFORMAÇÃO";
         String sucess = "SUCESSO";
 
@@ -181,7 +182,7 @@ public abstract class SGE{
         return VERDE +updated+" ATUALIZADO/A COM "+sucess+RESET;
     }//ALUNOS
 
-    protected void show(boolean all, boolean students, boolean teachers, String id) {
+    public void show(boolean all, boolean students, boolean teachers, String id) {
 
         if (all && students) {
             System.out.println(VERDE+ "  ---LISTA DE ALUNOS---   \n"+RESET);
@@ -196,7 +197,7 @@ public abstract class SGE{
             System.out.println(ROXO + "   --LISTA DE PROFESSORES--  "+RESET);
             for (Teacher teacher : Teacher.listTeachers) {
                 System.out.println(ROXO + " | NOME: "+teacher.getName()+" | IDENTIFICADOR -> "+teacher.getId()+" " +
-                        "| DICIPLINA: "+teacher.getDisciplina() +"    "+RESET);
+                        "| DICIPLINA: "+teacher.getSubject() +"    "+RESET);
             }
         }
 
@@ -218,14 +219,14 @@ public abstract class SGE{
                     System.out.println(YELLOW+" NÃO CONSEGUIMOS ENCONTRAR O PROFESSOR \n "+RESET);
                 } else {
                     System.out.println(ROXO+teacher.getName()+" | IDENTIFICADOR -> "+teacher.getId()+
-                            " | DISCIPLINA: "+teacher.getDisciplina()+"   \n"+RESET);
+                            " | DISCIPLINA: "+teacher.getSubject()+"   \n"+RESET);
                 }
             }
             else System.out.println(RED + "ATENÇÃO! IDENTIFICADOR INVÁLIDO.\n"+RESET);
         }
 
     }
-    protected String update(Teacher teacher, boolean name, boolean subject, boolean pass, String New) {
+    public String update(Teacher teacher, boolean name, boolean subject, boolean pass, String New) {
         String updated = "INFORMAÇÃO";
         String sucess = "SUCESSO";
 
@@ -247,7 +248,9 @@ public abstract class SGE{
             }
         } else if (subject) {
             updated = "DISCIPLINA";
+
             if (Validation.Number(New)) {
+
                 if (Validation.Option(Integer.parseInt(New), 1, 10)) {
                     switch (New) {
                         case "1" -> New = "MATEMÁTICA";
@@ -259,13 +262,13 @@ public abstract class SGE{
                         case "7" -> New = "SEAC";
                         case "8" -> New = "PORTUGUES";
                         case "9" -> New = "ANATOMIA";
-                        case "10" -> New = "POL";
+                        case "10" -> New = "FAI";
                         default -> {
                             System.out.println("DISCIPLINA INVÁLIDA");
                             return RED + "ERRO NA ATUALIZAÇÃO: DISCIPLINA" + RESET;
                         }
                     }
-                    teacher.setDisciplina(New);
+                    teacher.setSubject(New);
                 } else {
                     System.out.println(YELLOW + "A DISCIPLINA QUE ESCOLHEU É INVÁLIDA" + RESET);
                     return RED + "ERRO NA ATUALIZAÇÃO: DISCIPLINA" + RESET;
@@ -289,7 +292,7 @@ public abstract class SGE{
         }
 
     }
-    protected void delete(boolean teachers, Teacher teacher,Student student) {
+    public void delete(boolean teachers, Teacher teacher, Student student) {
         if (teachers) {
             Teacher.listTeachers.remove(teacher);
             System.out.println(ROXO+"PROFESSOR ELIMINADO!"+RESET);
@@ -304,17 +307,17 @@ public abstract class SGE{
                 .filter(student -> String.valueOf(student.getProcessNumber()).equals(process))
                 .findFirst().orElse(null);
     }
-    protected Teacher findTeacher(String id){
+    public Teacher findTeacher(String id){
         return Teacher.listTeachers.stream().filter(teachers -> String.valueOf(teachers.getId()).equals(id))
                 .findFirst().orElse(null);
     }
 
-    protected boolean LoginStudant(String id, String pass){
+    public boolean LoginStudent(String id, String pass){
         if(findStudent(id) != null)
             return findStudent(id).getPassword().equals(pass) && !   Student.listStudent.isEmpty();
         return false;
     }
-    protected boolean LoginTeacher(String id,String pass){
+    public boolean LoginTeacher(String id, String pass){
         if(findTeacher(id) != null)
             return findTeacher(id).getPassword().equals(pass) && !Teacher.listTeachers.isEmpty();
         return false;
@@ -325,8 +328,9 @@ public abstract class SGE{
         String nome = scan.nextLine();
         if (teacher) {
             System.out.println("DIGITE A DISCIPLINA");
+            disciplinas();
             String disciplina = scan.nextLine();
-            create(nome, disciplina);
+            create(nome,disciplina);
             return;
         }
         if (studant) {
@@ -346,10 +350,10 @@ public abstract class SGE{
 
 
 
-    protected String getAdminid() {
+    public String getAdminid() {
         return adminid;
     }
-    protected String getAdmPass() {
+    public String getAdmPass() {
         return admPass;
     }
 }

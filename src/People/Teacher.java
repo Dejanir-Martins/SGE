@@ -5,25 +5,25 @@ import java.util.List;
 
 public class Teacher extends People {
     private final long id;
-    private String disciplina;
+    private String subject;
     public static final List<Teacher> listTeachers = new ArrayList<>();
 
-    public Teacher(String name, long id, String password, String disciplina) {
+    public Teacher(String name, long id, String password, String subject) {
         this.name = name;
         this.id = id;
         this.password = password;
-        this.disciplina = disciplina;
+        this.subject = subject;
     }
 
     public long getId() {
         return id;
     }
 
-    public String getDisciplina() {
-        return disciplina;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setDisciplina(String disciplina) {
-        this.disciplina = disciplina;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }
