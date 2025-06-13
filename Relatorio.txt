@@ -1,11 +1,10 @@
 ==== RELATÓRIO DE NOTAS ====
 
-Aluno: DEJNAIR | Processo: 15146
-Disciplina: FAI             | P1: 12,0 | P2: 13,0 | MAC: 14,0 | Média: 13,0 -> APROVADO
-Disciplina: QUÍMICA         | P1: 20,0 | P2: 20,0 | MAC: 14,0 | Média: 18,0 -> APROVADO
+Aluno: ANTÓNIO MACHADO | Processo: 15533
+Disciplina: QUÍMICA         | P1: 13,0 | P2: 13,0 | MAC: 15,0 | Média: 13,7 -> APROVADO
 Resultado Final: APROVADO
 --------------------------------------------------
 
-Aluno: ANALTINA | Processo: 15850
+Aluno: DELMIRA | Processo: 15823
 Resultado Final: APROVADO
 --------------------------------------------------
